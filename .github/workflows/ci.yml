@@ -19,9 +19,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest bandit
 
       - name: Run Unit Tests
-        run: pytest
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          pytest
 
       - name: Static Security Analysis (Bandit)
-        run: bandit -r src
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          bandit -r src
