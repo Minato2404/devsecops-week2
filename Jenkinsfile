@@ -1,30 +1,38 @@
 pipeline {
     agent any
 
+    tools {
+        // Pastikan nama ini sama dengan yang Anda set di Manage Jenkins > Tools
+        python 'Python3.10'
+    }
+
     stages {
-        stage('1. Checkout') {
+        // Langsung mulai ke tahap Build, karena checkout sudah dilakukan otomatis oleh Jenkins.
+
+        stage('1. Build - Install Dependencies') {
             steps {
-                git branch: 'main', url: 'https://github.com/NAMA_USER/NAMA_REPO.git'
-            }
-        }
-        stage('2. Build - Install Dependencies') {
-            steps {
+                echo "Menginstall dependensi dari requirements.txt..."
                 sh 'pip install -r requirements.txt'
             }
         }
-        stage('3. Test - Unit Tests') {
+        stage('2. Test - Unit Tests') {
             steps {
+                echo "Menjalankan unit tests..."
                 sh 'pytest'
             }
         }
-        stage('4. Security Scan - Bandit') {
+        stage('3. Security Scan - Bandit') {
             steps {
+                echo "Menjalankan security scan..."
                 sh 'bandit -r src'
             }
         }
-        stage('5. Deploy to Staging') {
+        stage('4. Deploy to Staging') {
+            when {
+                branch 'main'
+            }
             steps {
-                echo '🚀 Deploying application to staging...'
+                echo ' Deploying application to staging...'
             }
         }
     }
