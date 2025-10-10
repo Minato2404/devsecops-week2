@@ -2,22 +2,19 @@ pipeline {
     agent any
 
     stages {
-        // Stage 0: Menyiapkan lingkungan dengan menginstal Python
         stage('0. Setup Environment') {
             steps {
-                echo "Installing Python and PIP..."
-                // Menjalankan perintah di dalam 'agent' (server Jenkins)
-                // apt-get adalah package manager untuk sistem operasi Debian/Ubuntu
-                sh 'apt-get update -y'
-                sh 'apt-get install -y python3 python3-pip'
-                sh 'python3 --version' // Memeriksa versi untuk memastikan instalasi berhasil
+                echo "Installing Python and PIP with admin rights..."
+                // Menambahkan 'sudo' untuk memberikan hak akses administrator
+                sh 'sudo apt-get update -y'
+                sh 'sudo apt-get install -y python3 python3-pip'
+                sh 'python3 --version'
             }
         }
 
         stage('1. Build - Install Dependencies') {
             steps {
                 echo "Menginstall dependensi..."
-                // Menggunakan pip3 karena itu yang kita install
                 sh 'pip3 install -r requirements.txt'
             }
         }
