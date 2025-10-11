@@ -18,11 +18,10 @@ pipeline {
         stage('2. Test - Unit Tests') {
             steps {
                 echo "Menjalankan unit tests..."
-                // Menjalankan pytest dari dalam virtual environment
-                // DAN memberitahu Python di mana letak folder 'src'
+                // Menggunakan PYTHONPATH=. agar Python mengenali folder 'src' sebagai paket
                 sh '''
                     . venv/bin/activate
-                    PYTHONPATH=src pytest
+                    PYTHONPATH=. pytest
                 '''
             }
         }
@@ -31,10 +30,9 @@ pipeline {
             steps {
                 echo "Menjalankan security scan..."
                 // Menjalankan bandit dari dalam virtual environment
-                // DAN memberitahu Python di mana letak folder 'src'
                 sh '''
                     . venv/bin/activate
-                    PYTHONPATH=src bandit -r src
+                    bandit -r src
                 '''
             }
         }
