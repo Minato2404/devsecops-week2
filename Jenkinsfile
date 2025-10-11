@@ -7,7 +7,6 @@ pipeline {
         stage('1. Build - Install Dependencies') {
             steps {
                 echo "Membuat virtual environment dan menginstall dependensi..."
-                // Membuat lingkungan virtual, mengaktifkannya, lalu menginstal
                 sh '''
                     python -m venv venv
                     . venv/bin/activate
@@ -20,9 +19,10 @@ pipeline {
             steps {
                 echo "Menjalankan unit tests..."
                 // Menjalankan pytest dari dalam virtual environment
+                // DAN memberitahu Python di mana letak folder 'src'
                 sh '''
                     . venv/bin/activate
-                    pytest
+                    PYTHONPATH=src pytest
                 '''
             }
         }
@@ -31,9 +31,10 @@ pipeline {
             steps {
                 echo "Menjalankan security scan..."
                 // Menjalankan bandit dari dalam virtual environment
+                // DAN memberitahu Python di mana letak folder 'src'
                 sh '''
                     . venv/bin/activate
-                    bandit -r src
+                    PYTHONPATH=src bandit -r src
                 '''
             }
         }
